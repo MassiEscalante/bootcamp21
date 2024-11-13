@@ -7,10 +7,15 @@ interface CalculatorState {
 
 export default function Calculator() {
   const [calcState, setCalcState] = useState<CalculatorState>({ total: 0, previousTotal: 0 });
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState<number | "">(0);  // Allow empty string for controlled input
 
   const handleAddClick = () => {
-    setCalcState({ total: calcState.total + value, previousTotal: calcState.total});
+    setCalcState({ total: calcState.total + (value || 0), previousTotal: calcState.total });
+  };
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = event.target.value;
+    setValue(inputValue === "" ? "" : Number(inputValue));  // Handle empty input gracefully
   };
 
   return (
@@ -20,7 +25,7 @@ export default function Calculator() {
           type="text"
           id="value"
           name="value"
-          onChange={(event) => { setValue(Number(event.target.value)); }}
+          onChange={handleChange}
           value={value}
         />
       </p>
